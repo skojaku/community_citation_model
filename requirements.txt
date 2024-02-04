@@ -12,3 +12,4 @@ powerlaw
 re
 utils
 scipy
+scikit-learn
