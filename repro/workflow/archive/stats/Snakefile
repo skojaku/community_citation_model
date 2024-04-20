@@ -1,0 +1,51 @@
+from os.path import join as j
+
+#configfile: "../../config.yaml"
+
+rule fit_powerlaw_degree_dist:
+    input:
+        legcit_net_file = CITATION_NET,
+        legcit_node_file = PAPER_TABLE_FILE,
+        #legcit_court_file = COURT_TABLE_FILE,
+        #wos_net_file = WOS_PAPER_CITATION_NET,
+    output:
+        output_file = DEG_POWERLAW_PARAM_TABLE
+    script:
+        "workflow/fit-powerlaw-degree-dist.py"
+
+
+rule calc_citation_event_time:
+    input:
+        net_file = CITATION_NET,
+        node_file = PAPER_TABLE_FILE,
+        #court_file = COURT_TABLE_FILE,
+    output:
+        output_file = CITATION_EVENT_TIME
+    script:
+        "workflow/calc-recency.py"
+
+
+rule calc_citation_rate:
+    input:
+        net_file = CITATION_NET,
+        node_file = PAPER_TABLE_FILE,
+        #court_file = COURT_TABLE_FILE,
+    output:
+        output_file = CITATION_RATE_PREF_ATTACHMENT
+    script:
+        "workflow/calc-citation-rate-pref-attachment.py"
+
+
+# Estimate the fitness
+rule calc_fitness:
+    input:
+        net_file = CITATION_NET,
+        node_file = PAPER_TABLE_FILE,
+        #input_file=CHUNK_FILE,
+    output:
+        output_file=FITNESS_CHUNK_FILE,
+    params:
+        opt_method=lambda wildcards: wildcards.opt,
+        min_cit = 20,
+    script:
+        "workflow/fitness_analysis.py"

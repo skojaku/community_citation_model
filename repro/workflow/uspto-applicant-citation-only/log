@@ -1,0 +1,99 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	create_uspto_dataset
+	1	sql2csv_citation
+	1	sql2csv_inventor
+	1	sql2csv_patent
+	1	sql2csv_patent_inventor
+	6
+Select jobs to execute...
+
+[Mon Jun 13 14:40:54 2022]
+rule sql2csv_citation:
+    input: /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.uspatentcitation.sql
+    output: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/usptocitation.csv
+    jobid: 2
+
+[Mon Jun 13 14:40:54 2022]
+rule sql2csv_inventor:
+    input: /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00010.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00029.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00016.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00011.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00006.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00031.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00017.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00024.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00009.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00036.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00015.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00027.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00021.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00035.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00001.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00004.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00023.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00037.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00020.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00002.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00013.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00000.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00014.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00025.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00022.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00028.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00030.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00005.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00034.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00012.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00033.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00032.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00008.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00007.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00003.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00018.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00026.sql, /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.inventor.00019.sql
+    output: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/inventor.csv
+    jobid: 3
+
+[Mon Jun 13 14:40:54 2022]
+rule sql2csv_patent_inventor:
+    input: /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.patent_inventor.sql
+    output: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/patent_inventor.csv
+    jobid: 4
+
+[Mon Jun 13 14:40:54 2022]
+rule sql2csv_patent:
+    input: /gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/PatentsView_20200630.patent.sql
+    output: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/patent.csv
+    jobid: 5
+
+[33mJob counts:
+	count	jobs
+	1	sql2csv_citation
+	1[0m
+[33mJob counts:
+	count	jobs
+	1	sql2csv_patent_inventor
+	1[0m
+[33mJob counts:
+	count	jobs
+	1	sql2csv_patent
+	1[0m
+[33mJob counts:
+	count	jobs
+	1	sql2csv_inventor
+	1[0m
+/usr/bin/bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+/usr/bin/bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+/usr/bin/bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+/usr/bin/bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by bash)
+bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by bash)
+bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by bash)
+bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by bash)
+[Mon Jun 13 14:41:09 2022]
+Finished job 4.
+1 of 6 steps (17%) done
+[Mon Jun 13 14:41:49 2022]
+Finished job 3.
+2 of 6 steps (33%) done
+[Mon Jun 13 14:42:25 2022]
+Finished job 2.
+3 of 6 steps (50%) done
+[Mon Jun 13 14:42:46 2022]
+Finished job 5.
+4 of 6 steps (67%) done
+Select jobs to execute...
+
+[Mon Jun 13 14:42:46 2022]
+rule create_uspto_dataset:
+    input: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/usptocitation.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/inventor.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/patent_inventor.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/raw_csv_files/patent.csv
+    output: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/paper_table.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/author_table.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/citation_net.npz, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/paper_author_net.npz
+    jobid: 1
+
+/usr/bin/bash: /home/skojaku/anaconda3/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+sys:1: DtypeWarning: Columns (2,6,9,10,12,17,18,19,21,26,27,28,29,30,31,32,34,35,36,37,38) have mixed types.Specify dtype option on import or set low_memory=False.
+[Mon Jun 13 14:50:18 2022]
+Finished job 1.
+5 of 6 steps (83%) done
+Select jobs to execute...
+
+[Mon Jun 13 14:50:18 2022]
+localrule all:
+    input: /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/paper_table.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/citation_net.npz, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/author_table.csv, /home/skojaku/projects/Legal-Citations/data/Data/uspto-applicant-citation-only/preprocessed/paper_author_net.npz
+    jobid: 0
+
+[Mon Jun 13 14:50:18 2022]
+Finished job 0.
+6 of 6 steps (100%) done
+Complete log: /home/skojaku/projects/Legal-Citations/workflow/uspto-applicant-citation-only/.snakemake/log/2022-06-13T144054.356069.snakemake.log

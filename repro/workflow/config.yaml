@@ -1,0 +1,4 @@
+# set the directories below and copy this file as `config.yaml`
+data_dir: "/home/skojaku/projects/Legal-Citations/data/Data"
+paper_dir: "/home/skojaku/projects/Legal-Citations/paper"
+wos_json_dir: "/gpfs/sciencegenome/WoSjson2019/"

@@ -1,0 +1,1 @@
+tail -n +5 $1 |sed 's/^.//' |sed 's/..$//' | sed '1i patent_id, sequence, mainclass_id, mainclass_title, subclass_id, subclass_title, num_assignees, num_inventors, num_patents, first_seen_date, last_seen_date, years_active' >$2
