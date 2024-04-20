@@ -36,19 +36,9 @@ CIT_TIME_WINDOW_LIST = [3, 5, 7, 10]
 params_spherical_model = {
     "geometry":[True],
     "symmetric":[True],
-    #"fitness":[False, True],
-    "fitness":[True],
-    #"aging":[True],
-    "aging":[False],
-    #"aging":[False, True],
-    #"symmetric":[False, True],
-    #"aging":[True, False],
-    #"aging":[False, True],
-    #"fitness":[True, False],
-    #"fitness":[True, False],
-    #"dim": [128],
+    "fitness":[False, True],
+    "aging":[True, False],
     "dim": [3, 4, 8, 16, 64, 128, 256],
-    #"c0": [20]
     "c0": [5, 10, 20]
 }
 
@@ -59,39 +49,21 @@ params_canonical_spherical_model = {
     "fitness":[True],
     "dim": [128],
     "c0": [20],
-    #"c0": [10],
-#    "geometry":[True],
-#    "symmetric":[True],
-#    "aging":[True],
-#    "fitness":[True],
-#    "dim": [128],
-#    "c0": [10],
 }
 
 # Citation prediction benchmark
 params_citation_prediction = {
-    "t_train":[2000],
-    #"t_train":[1990,2000],
+    "t_train":[1990,2000],
     "geometry":[True],
     "symmetric":[True],
     "aging":[False, True],
     "fitness":[False, True],
-    #"aging":[False],
-    #"fitness":[True],
-    #"aging":[False],
-    #"fitness":[True],
-    "dim": [128],
-    #"dim": [2, 3, 4, 8, 16, 64, 128],
-    "c0": [20],
-    #"c0": [5, 10, 20],
+    "dim": [2, 3, 4, 8, 16, 64, 128],
+    "c0": [5, 10, 20],
 }
 params_baseline_citation_prediction = {
     "t_train":params_citation_prediction["t_train"],
-    #"model":["PA"], # PA: preferential attachment, LTCM: long term citation
     "model":["PA", "LTCM"], # PA: preferential attachment, LTCM: long term citation
-    #"model":["PA", "LTCM", "cLTCM"], # PA: preferential attachment, LTCM: long term citation
-    #"model":["PA", "LTCM", "cLTCM", "bLTCM"], # PA: preferential attachment, LTCM: long term citation
-    #"model":["PA", "LTCM", "bLTCM"], # PA: preferential attachment, LTCM: long term citation
 }
 
 SIM_N_SAMPLES = 1
@@ -102,17 +74,13 @@ sim_geo_params = {
     "T": [100],
     "nt": [1000],
     "nrefs":[10],
-    #"kappaPaper":[128],
     "kappaCitation":[3],
     "mu":[4],
     "sigma":[3],
     "growthRate":[0, 0.05],
     "c0":[5,10,20]
-    #"growthRate":[0, 0.05]
 }
 sim_pa_params = {k:v for k,v in sim_geo_params.items() if k in ["T", "nrefs", "nt", "sample", "growthRate"]}
-#sim_pa_paramspace = to_paramspace(sim_pa_params)
-#sim_geo_paramspace = to_paramspace(sim_geo_params)
 
 N_SIM_NET_SAMPLES = 3
 
