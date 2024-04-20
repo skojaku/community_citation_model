@@ -1,0 +1,78 @@
+from os.path import join as j
+
+configfile: "../config.yaml"
+
+
+#
+# Directories
+#
+LEG_DATA_DIR = j(config["data_dir"])
+
+
+# ================
+# Source
+# ================
+LEG_RAW_DATA_DIR = j(LEG_DATA_DIR, "Raw")
+LEG_CITATION = j(LEG_RAW_DATA_DIR, "Legal_Citation_Dict.json")
+LEG_CITATION_INFO = j(LEG_RAW_DATA_DIR, "Citation_Info_Dict.json")
+LEG_COURT_HIERARCHY = j(LEG_RAW_DATA_DIR, "court_hierarchy.json")
+LEG_AUTHOR_JSON_FILE = j(LEG_RAW_DATA_DIR, "citation_info_dict_unique_judges_feb6.json")
+#LEG_AUTHOR_JSON_FILE = j(LEG_RAW_DATA_DIR, "citation_info_dict_with_judges.json")
+LEGV_PAPER_CATEGORY_TABLE= j(LEGV_PREPROC_DATA_DIR, "paper_category_table.csv")
+LEGV_CATEGORY_TABLE= j(LEGV_PREPROC_DATA_DIR, "category_table.csv")
+
+# ================
+# Preprocessed
+# ================
+LEG_PREPROC_DATA_DIR = j(LEG_DATA_DIR, "legcit", "preprocessed")
+LEG_PAPER_TABLE = j(LEG_PREPROC_DATA_DIR, "paper_table.csv")
+LEG_CIATAION_NET = j(LEG_PREPROC_DATA_DIR, "citation_net.npz")
+LEG_AUTHOR_TABLE = j(LEG_PREPROC_DATA_DIR, "author_table.csv")
+LEG_PAPER_AUTHOR_NET = j(LEG_PREPROC_DATA_DIR, "paper_author_net.npz")
+
+# Supplementary
+LEG_COURT_TABLE_FILE = j(LEG_PREPROC_DATA_DIR, "court_table.csv")
+
+rule construct_citation_net:
+    input:
+        node_data_file=LEG_CITATION_INFO,
+        link_data_file=LEG_CITATION,
+        court_data_file=LEG_COURT_HIERARCHY,
+    output:
+        net_file=LEG_CIATAION_NET,
+        node_table_file=LEG_PAPER_TABLE,
+        court_table_file=LEG_COURT_TABLE_FILE,
+    script:
+        "workflow/const-cit-net.py"
+
+
+rule construct_author_paper_net:
+    input:
+        paper_table_file=LEG_PAPER_TABLE,
+        author_json_file=LEG_AUTHOR_JSON_FILE
+    output:
+        output_author_file =LEG_AUTHOR_TABLE,
+        output_paper_author_net_file =LEG_PAPER_AUTHOR_NET
+    script:
+        "workflow/const-author-paper-net.py"
+
+rule construct_category_table:
+    input:
+        input_file=LEGV_PAPER_TABLE,
+        court_hierarchy_file=LEGV_COURT_HIERARCHY
+    output:
+        output_paper_category_table_file = LEGV_PAPER_CATEGORY_TABLE,
+        output_category_table_file = LEGV_CATEGORY_TABLE
+    script:
+        "workflow/make_category_table.py"
+
+
+rule all:
+    input:
+        LEG_PAPER_TABLE,
+        LEG_CIATAION_NET,
+        LEG_AUTHOR_TABLE,
+        LEG_PAPER_AUTHOR_NET,
+        LEG_COURT_TABLE_FILE,
+        LEGV_PAPER_CATEGORY_TABLE,
+        LEGV_CATEGORY_TABLE

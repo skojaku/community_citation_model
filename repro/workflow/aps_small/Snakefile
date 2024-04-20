@@ -1,0 +1,94 @@
+from os.path import join as j
+
+
+configfile: "../config.yaml"
+
+
+#
+# Directories
+
+DATA_DIR = j(config["data_dir"])
+
+# ================
+# Source
+# ================
+
+# MAG
+MAG_DIR = "/gpfs/sciencegenome/mag-2020-09-01"
+MAG_PAPER_TABLE = j(MAG_DIR, "mag", "Papers.txt")
+MAG_AUTHOR_PAPER_TABLE = j(MAG_DIR, "mag", "PaperAuthorAffiliations.txt")
+MAG_AUTHOR_TABLE = j(MAG_DIR, "mag", "Authors.txt")
+
+# Source
+APS_CITATION = (
+    "/gpfs/sciencegenome/aps-dataset-citations-2019/aps-dataset-citations-2019.csv"
+)
+APS_PAPER_METADATA_DIR = (
+    "/gpfs/sciencegenome/aps-dataset-citations-2019/aps-dataset-metadata-2019"
+)
+
+
+# ================
+# Preprocessed
+# ================
+
+APS_PREP_DATA_DIR = j(DATA_DIR, "aps_small", "preprocessed")
+APS_PAPER_TABLE = j(APS_PREP_DATA_DIR, "paper_table.csv")
+APS_CITATION_NET = j(APS_PREP_DATA_DIR, "citation_net.npz")
+APS_AUTHOR_TABLE = j(APS_PREP_DATA_DIR, "author_table.csv")
+APS_AUTHOR_PAPER_NET = j(APS_PREP_DATA_DIR, "paper_author_net.npz")
+
+# Supplementary
+APS_AUTHOR_PAPERID_DATA = j(APS_PREP_DATA_DIR, "supp", "author2PAPERID.dat")
+APS_METADATA_TABLE = j(APS_PREP_DATA_DIR, "supp", "paper-metadata-table.csv")
+
+
+rule all:
+    input:
+        APS_PAPER_TABLE,
+        APS_AUTHOR_TABLE,
+        APS_CITATION_NET,
+        APS_AUTHOR_PAPER_NET
+
+
+rule construct_aps_paper_citation_net:
+    input:
+        citation_file=APS_CITATION,
+        paper_metadata_file=APS_METADATA_TABLE,
+    params:
+        sample_frac = 0.3,
+    output:
+        output_net_file=APS_CITATION_NET,
+        output_node_file=APS_PAPER_TABLE,
+    script:
+        "workflow/construct-aps-citation-net.py"
+
+rule construct_aps_paper_author_net:
+    input:
+        data_file=APS_AUTHOR_PAPERID_DATA,
+        paper_file=APS_PAPER_TABLE,
+    output:
+        net_file=APS_AUTHOR_PAPER_NET,
+        author_file=APS_AUTHOR_TABLE,
+    script:
+        "workflow/construct-aps-paper-author-net.py"
+
+
+rule make_aps_paper_metadata_table:
+    input:
+        APS_PAPER_METADATA_DIR,
+    output:
+        APS_METADATA_TABLE,
+    shell:
+        "python3 workflow/make-aps-paper-metadata-table.py {input} {output}"
+
+
+rule get_mag_author_ids:
+    input:
+        mag_paper_table_file=MAG_PAPER_TABLE,
+        mag_author_paper_table_file=MAG_AUTHOR_PAPER_TABLE,
+        mag_author_table_file=MAG_AUTHOR_TABLE,
+    output:
+        output_file=APS_AUTHOR_PAPERID_DATA,
+    script:
+        "workflow/get-aps-author-ids-from-mag.py"

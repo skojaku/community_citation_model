@@ -1,0 +1,252 @@
+from os.path import join as j
+import numpy as np
+include: "./utils.smk"
+
+# You can use config file to set the path variables.
+configfile: "workflow/config.yaml"
+
+
+DATA_DIR = config["data_dir"]
+
+# Paper
+PAPER_DIR = "paper/current"
+FIG_DIR = "figs"
+PAPER_SRC, SUPP_SRC = [j(PAPER_DIR, f) for f in ("main.tex", "supp.tex")]
+PAPER, SUPP = [j(PAPER_DIR, f) for f in ("main.pdf", "supp.pdf")]
+
+# =========
+# Data list
+# =========
+#DATA_LIST = ["legcitv2", "aps"]
+#DATA_LIST = ["aps", "legcitv2"]
+#DATA_LIST = ["aps"]
+#DATA_LIST = ["legcitv2", "aps"]
+#DATA_LIST = ["aps"]
+DATA_LIST = ["legcitv2", "aps", "uspto"]
+
+
+# ===========================
+# Data-specific parameters and files
+# ===========================
+SUPREME_COURT_ID=8954
+NOMINATION_DATE_FILE = j(DATA_DIR, "Raw", "nomination_dates.json")
+CIT_TIME_WINDOW_LIST = [3, 5, 7, 10]
+
+# Spherical model
+params_spherical_model = {
+    "geometry":[True],
+    "symmetric":[True],
+    #"fitness":[False, True],
+    "fitness":[True],
+    #"aging":[True],
+    "aging":[False],
+    #"aging":[False, True],
+    #"symmetric":[False, True],
+    #"aging":[True, False],
+    #"aging":[False, True],
+    #"fitness":[True, False],
+    #"fitness":[True, False],
+    #"dim": [128],
+    "dim": [3, 4, 8, 16, 64, 128, 256],
+    #"c0": [20]
+    "c0": [5, 10, 20]
+}
+
+params_canonical_spherical_model = {
+    "geometry":[True],
+    "symmetric":[True],
+    "aging":[False],
+    "fitness":[True],
+    "dim": [128],
+    "c0": [20],
+    #"c0": [10],
+#    "geometry":[True],
+#    "symmetric":[True],
+#    "aging":[True],
+#    "fitness":[True],
+#    "dim": [128],
+#    "c0": [10],
+}
+
+# Citation prediction benchmark
+params_citation_prediction = {
+    "t_train":[2000],
+    #"t_train":[1990,2000],
+    "geometry":[True],
+    "symmetric":[True],
+    "aging":[False, True],
+    "fitness":[False, True],
+    #"aging":[False],
+    #"fitness":[True],
+    #"aging":[False],
+    #"fitness":[True],
+    "dim": [128],
+    #"dim": [2, 3, 4, 8, 16, 64, 128],
+    "c0": [20],
+    #"c0": [5, 10, 20],
+}
+params_baseline_citation_prediction = {
+    "t_train":params_citation_prediction["t_train"],
+    #"model":["PA"], # PA: preferential attachment, LTCM: long term citation
+    "model":["PA", "LTCM"], # PA: preferential attachment, LTCM: long term citation
+    #"model":["PA", "LTCM", "cLTCM"], # PA: preferential attachment, LTCM: long term citation
+    #"model":["PA", "LTCM", "cLTCM", "bLTCM"], # PA: preferential attachment, LTCM: long term citation
+    #"model":["PA", "LTCM", "bLTCM"], # PA: preferential attachment, LTCM: long term citation
+}
+
+SIM_N_SAMPLES = 1
+sim_geo_params = {
+    "aging":[True, False],
+    "fitness": [True, False],
+    "dim":[2,4, 8, 32, 64, 128],
+    "T": [100],
+    "nt": [1000],
+    "nrefs":[10],
+    #"kappaPaper":[128],
+    "kappaCitation":[3],
+    "mu":[4],
+    "sigma":[3],
+    "growthRate":[0, 0.05],
+    "c0":[5,10,20]
+    #"growthRate":[0, 0.05]
+}
+sim_pa_params = {k:v for k,v in sim_geo_params.items() if k in ["T", "nrefs", "nt", "sample", "growthRate"]}
+#sim_pa_paramspace = to_paramspace(sim_pa_params)
+#sim_geo_paramspace = to_paramspace(sim_geo_params)
+
+N_SIM_NET_SAMPLES = 3
+
+# =============
+# Preprocessed
+# =============
+CITATION_NET = j(DATA_DIR, "{data}", "preprocessed", "citation_net.npz")
+PAPER_TABLE = j(DATA_DIR, "{data}", "preprocessed", "paper_table.csv")
+AUTHOR_TABLE = j(DATA_DIR, "{data}", "preprocessed", "author_table.csv")
+PAPER_AUTHOR_TABLE = j(DATA_DIR, "{data}", "preprocessed", "paper_author_net.npz")
+CATEGORY_TABLE = j(DATA_DIR, "{data}", "preprocessed", "category_table.csv")
+PAPER_CATEGORY_TABLE = j(DATA_DIR, "{data}", "preprocessed", "paper_category_table.csv")
+
+
+# ==========
+# Derived
+# ==========
+FITNESS_TABLE = j(DATA_DIR, "{data}", "derived", "fitness_table.csv")
+PAPER_IMPACT = j(DATA_DIR, "{data}", "derived", "paper-impact_timeWindow~{time_window}.npz")
+PUB_SEQ = j(DATA_DIR, "{data}", "derived", "publication_seq_timeWindow~{time_window}.json")
+AUTHOR_TABLE_Q_FACTOR_EXTENDED = j(DATA_DIR, "{data}", "derived", "author_table_Q_factor_extended_timeWindow~{time_window}.csv")
+AUTHOR_TABLE_Q_FACTOR_BEFORE_AFTER_NOMINATION = j(DATA_DIR, "{data}", "derived", "Q_factor_before_after_nomination_timeWindow~{time_window}.csv")
+#RAND_SB_COEF_TABLE_DIR = j(DATA_DIR, "{data}", "derived", "sb_coefficient4random_net")
+#RAND_SB_COEF_TABLE = j(RAND_SB_COEF_TABLE_DIR, "model~{model}_sample_id~{sample_id}.csv")
+
+# ===========
+# Experiments
+# ===========
+#
+# Analyze the empirical network
+#
+include: "./Snakefile_stats_empirical.smk"
+#
+# Reproduceability test
+#
+include: "./Snakefile_reproduceability_test.smk"
+
+#
+# Prediction test
+#
+include: "./Snakefile_prediction.smk"
+
+#
+# Simulation test
+#
+include: "./Snakefile_simulations.smk"
+
+
+rule all:
+    input:
+        expand(PRED_TEST_EVAL_FILE, data = DATA_LIST, **params_citation_prediction),
+        expand(PRED_TEST_EVAL_BASELINE_FILE, data = DATA_LIST, **params_baseline_citation_prediction),
+        #
+        # Geomtric model
+        #
+        expand(REPRO_TEST_GEO_SIM_NET_FILE, **params_spherical_model, data = DATA_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_GEO_SIM_NODE_FILE, **params_spherical_model, data = DATA_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_GEO_SIM_SB_COEF_TABLE, data = DATA_LIST, **params_spherical_model, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_GEO_SIM_DATA_DEGREE_DIST, data = DATA_LIST, **params_spherical_model, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_GEO_SIM_FITTED_POWER_LAW_PARAMS, data = DATA_LIST, **params_spherical_model, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_GEO_SIM_DATA_NEW_VS_ACCUM_CIT, data = DATA_LIST, **params_spherical_model, sample = list(range(N_SIM_NET_SAMPLES))),
+        #
+        # Baselines
+        #
+        #expand(REPRO_TEST_BASELINE_GEOMETRIC_MODEL_FILE, data = DATA_LIST, model =  "PA", sample = [0], **params_canonical_spherical_model),
+        expand(REPRO_TEST_BASELINE_SIM_NET_FILE, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_BASELINE_SIM_DATA_DEGREE_DIST, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_BASELINE_SIM_DATA_EVENT_INTERVAL, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_BASELINE_SIM_DATA_NEW_VS_ACCUM_CIT, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_BASELINE_SIM_FITTED_POWER_LAW_PARAMS, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_BASELINE_SIM_SB_COEF_TABLE, data = DATA_LIST, model= BASELINE_MODEL_LIST, sample = list(range(N_SIM_NET_SAMPLES))),
+        expand(REPRO_TEST_UMAP_FILE, **params_canonical_spherical_model, data = DATA_LIST ),
+        #
+        # Stats of embedding
+        #
+        #expand(REPRO_CITATION_RADII_FILE, data=DATA_LIST, **params_canonical_spherical_model),
+        expand(KEYWORD_PRED_SCORE_FILE, data=DATA_LIST, **params_canonical_spherical_model, categoryClass = ["main", "sub"]),
+        expand(KEYWORD_PRED_SCORE_BY_CITATION_FILE, data=DATA_LIST, categoryClass = ["main", "sub"] ),
+        #expand(REPRO_BASELINE_CITATION_RADII_FILE, data=DATA_LIST, **params_canonical_spherical_model, model=["PA"], sample = [0]),
+        #
+        # Prediction
+        #
+        expand(PRED_TEST_EVAL_FILE, data = DATA_LIST, **params_citation_prediction),
+        expand(PRED_TEST_EVAL_BASELINE_FILE, data = DATA_LIST, **params_baseline_citation_prediction),
+        #
+        # Figure
+        #
+        expand(FIG_DATA_NEW_VS_ACCUM_CIT, data = DATA_LIST),
+        expand(FIG_DATA_CITATION_RATE, data = DATA_LIST),
+        expand(FIG_DATA_EVENT_INTERVAL, data = DATA_LIST),
+        expand(FIG_DATA_EVENT_INTERVAL_UNNORMALIZED, data = DATA_LIST),
+        expand(FIG_DATA_NUM_PAPERS, data = DATA_LIST),
+        expand(FIG_DATA_AVE_NUM_REFS, data = DATA_LIST),
+        expand(FIG_DATA_DEGREE_DIST, data = DATA_LIST),
+        expand(FIG_DATA_SB_COEFFICIENT, data = DATA_LIST),
+        #
+        # Figure 2
+        #
+        expand(FIG_REPRO_TEST_CITATION_RATE, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_EVENT_INTERVAL, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_EVENT_INTERVAL_UNNORMALIZED, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT_ALL_RANGE, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_GEO_SIM_DATA_SB_COEFFICIENT, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_EMB_SPACE, data = DATA_LIST, **params_canonical_spherical_model, sample = [0]),
+
+rule figs:
+    input:
+        #
+        # Figure 1
+        #
+        expand(FIG_DATA_NEW_VS_ACCUM_CIT, data = DATA_LIST),
+        expand(FIG_DATA_CITATION_RATE, data = DATA_LIST),
+        expand(FIG_DATA_EVENT_INTERVAL, data = DATA_LIST),
+        expand(FIG_DATA_EVENT_INTERVAL_UNNORMALIZED, data = DATA_LIST),
+        expand(FIG_DATA_NUM_PAPERS, data = DATA_LIST),
+        expand(FIG_DATA_AVE_NUM_REFS, data = DATA_LIST),
+        expand(FIG_DATA_DEGREE_DIST, data = DATA_LIST),
+        expand(FIG_DATA_SB_COEFFICIENT, data = DATA_LIST),
+        #
+        # Figure 2
+        #
+        expand(FIG_REPRO_TEST_CITATION_RATE, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_EVENT_INTERVAL, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_EVENT_INTERVAL_UNNORMALIZED, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT_ALL_RANGE, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_GEO_SIM_DATA_SB_COEFFICIENT, data = DATA_LIST, **params_spherical_model),
+        expand(FIG_EMB_SPACE, data = DATA_LIST, **params_canonical_spherical_model, sample = [0]),
+#        expand(FIG_CITATION_RADII, data = DATA_LIST, **params_canonical_spherical_model, model=["PA"], sample = [0]),
+#        expand(FIG_KEYWORD_PRED_SCORE_FILE, data = DATA_LIST, **params_canonical_spherical_model, categoryClass=["main", "sub"] ),
+#        expand(FIG_PRED_TRUE_VS_PREDICTION, data = DATA_LIST, **params_citation_prediction),
+#        expand(FIG_PRED_ERROR, data = DATA_LIST, **params_citation_prediction),
+#        expand(FIG_PRED_HIGHLY_CITED,data = DATA_LIST, **params_citation_prediction)
+        #"figs/prediction.pdf",
+
+

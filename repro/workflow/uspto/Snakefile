@@ -1,0 +1,112 @@
+
+from os.path import join as j
+from glob import glob
+
+
+configfile: "../config.yaml"
+
+DATA_DIR = j(config["data_dir"])
+
+
+# ============
+# RAW DATA
+# ===========
+
+# SQL files
+RAW_SQL_DATA_DIR = "/gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/"
+RAW_SQL_CITATION_TABLE = j(RAW_SQL_DATA_DIR, "PatentsView_20200630.uspatentcitation.sql")
+RAW_SQL_INVENTOR_TABLE_LIST = list(glob(j(RAW_SQL_DATA_DIR, "PatentsView_20200630.inventor.*.sql")))
+RAW_SQL_PATENT_INVENTOR_TABLE = j(RAW_SQL_DATA_DIR, "PatentsView_20200630.patent_inventor.sql")
+RAW_SQL_PATENT_TABLE = j(RAW_SQL_DATA_DIR, "PatentsView_20200630.patent.sql")
+RAW_SQL_PATENT_CLASS_TABLE = j(RAW_SQL_DATA_DIR, "PatentsView_20200630.cpc_current.sql")
+
+
+# CSV files
+USPTO_PREP_DATA_DIR = j(DATA_DIR, "uspto", "preprocessed")
+USPTO_RAW_CSV_DIR = j(USPTO_PREP_DATA_DIR, "raw_csv_files")
+RAW_CSV_CITATION_TABLE=j(USPTO_RAW_CSV_DIR, "usptocitation.csv")
+RAW_CSV_INVENTOR_TABLE=j(USPTO_RAW_CSV_DIR, "inventor.csv")
+RAW_CSV_PATENT_INVENTOR_TABLE=j(USPTO_RAW_CSV_DIR, "patent_inventor.csv")
+RAW_CSV_PATENT_TABLE=j(USPTO_RAW_CSV_DIR, "patent.csv")
+RAW_CSV_PATENT_CLASS_TABLE=j(USPTO_RAW_CSV_DIR, "patent_category_table.csv")
+RAW_PATENT_CATEGORY_TABLE = j(DATA_DIR, "Raw/uspto-category-name.csv")
+
+# ================
+# Preprocessed
+# ================
+
+USPTO_PAPER_TABLE = j(USPTO_PREP_DATA_DIR, "paper_table.csv")
+USPTO_CITATION_NET = j(USPTO_PREP_DATA_DIR, "citation_net.npz")
+USPTO_AUTHOR_TABLE = j(USPTO_PREP_DATA_DIR, "author_table.csv")
+USPTO_AUTHOR_PAPER_NET = j(USPTO_PREP_DATA_DIR, "paper_author_net.npz")
+USPTO_PAPER_CATEGORY_TABLE = j(USPTO_PREP_DATA_DIR, "paper_category_table.csv")
+USPTO_CATEGORY_TABLE = j(USPTO_PREP_DATA_DIR, "category_table.csv")
+
+rule all:
+    input:
+        USPTO_PAPER_TABLE,
+        USPTO_CITATION_NET,
+        USPTO_AUTHOR_TABLE,
+        USPTO_AUTHOR_PAPER_NET,
+        USPTO_PAPER_CATEGORY_TABLE,
+        USPTO_CATEGORY_TABLE
+
+rule create_uspto_dataset:
+    input:
+        citation_table_file = RAW_CSV_CITATION_TABLE,
+        inventor_table_file = RAW_CSV_INVENTOR_TABLE,
+        patent_inventor_table_file = RAW_CSV_PATENT_INVENTOR_TABLE,
+        patent_table_file = RAW_CSV_PATENT_TABLE,
+        patent_category_table_file = RAW_CSV_PATENT_CLASS_TABLE,
+        category_name_table_file =RAW_PATENT_CATEGORY_TABLE
+    output:
+        output_paper_table_file = USPTO_PAPER_TABLE,
+        output_author_table_file=USPTO_AUTHOR_TABLE,
+        output_citation_net_file=USPTO_CITATION_NET,
+        output_author_paper_net_file=USPTO_AUTHOR_PAPER_NET,
+        output_paper_category_table_file=USPTO_PAPER_CATEGORY_TABLE,
+        output_category_table_file=USPTO_CATEGORY_TABLE,
+    script:
+        "workflow/compile-dataset.py"
+
+rule sql2csv_citation:
+    input:
+        RAW_SQL_CITATION_TABLE
+    output:
+        RAW_CSV_CITATION_TABLE
+    run:
+        shell("bash workflow/sql2csv.sh {input} {output}")
+
+rule sql2csv_inventor:
+    input:
+        RAW_SQL_INVENTOR_TABLE_LIST
+    output:
+        RAW_CSV_INVENTOR_TABLE
+    run:
+        shell("bash workflow/sql2csv.sh {input} {output}")
+
+
+rule sql2csv_patent_inventor:
+    input:
+        RAW_SQL_PATENT_INVENTOR_TABLE
+    output:
+        RAW_CSV_PATENT_INVENTOR_TABLE
+    run:
+        shell("bash workflow/sql2csv.sh {input} {output}")
+
+
+rule sql2csv_patent:
+    input:
+        RAW_SQL_PATENT_TABLE
+    output:
+        RAW_CSV_PATENT_TABLE
+    run:
+        shell("bash workflow/sql2csv.sh {input} {output}")
+
+rule sql2vec_patent_category:
+    input:
+        RAW_SQL_PATENT_CLASS_TABLE
+    output:
+        RAW_CSV_PATENT_CLASS_TABLE
+    run:
+        shell("bash workflow/sql2csv.sh {input} {output}")
