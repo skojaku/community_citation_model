@@ -79,8 +79,9 @@ TBD
   - [ ] Test
 - [ ] Automatic workflow for reproduceability
   - [x] Move Snakefile and workflow scripts
+  - [x] Run the workflow and make sure that it works
+  - [x] Write the instruction on README.
   - [ ] Remove unused rules & variables
   - [ ] Pack all rules into one Snakemake
   - [ ] Replace old CCM code with new CCM code
-  - [ ] Run the workflow and make sure that it works (for APS)
-  - [ ] Write the instruction on README.
+
