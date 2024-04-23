@@ -12,7 +12,7 @@ This is a Python repository implementing Community Citation Model
   - [ ] Write the installation instruction on README
   - [ ] Test
 - [ ] Automatic workflow for reproduceability
-  - [ ] Move Snakefile and workflow scripts
+  - [x] Move Snakefile and workflow scripts
   - [ ] Remove unused rules & variables
   - [ ] Pack all rules into one Snakemake
   - [ ] Replace old CCM code with new CCM code
