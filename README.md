@@ -26,8 +26,8 @@ conda activate citationdynamics
 We built the workflows with [Snakemake](https://snakemake.readthedocs.io/en/stable/), a workflow management system.
 
 ### Set up the environment variables
-First, set the environment specific variables in the [`repro/workflow/config.yaml`](./repro/config/config.yaml) file.
-The variables defined in the [`repro/config/config.yaml`](./repro/config/config.yaml) file are
+First, set the environment specific variables in the [`repro/workflow/config.yaml`](./repro/workflow/config.yaml) file.
+The variables defined in the [`repro/workflow/config.yaml`](./repro/workflow/config.yaml) file are
 - `data_dir`: The directory where the raw data is stored.
 - `supp_data_dir`: The directory where the supplementary data is stored (which is [repro/data_supp](./repro/data_supp)).
 - `aps_data_dir`: The directory where the APS data is stored.
