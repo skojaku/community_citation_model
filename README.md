@@ -34,7 +34,7 @@ The variables defined in the [`repro/workflow/config.yaml`](./repro/workflow/con
 - `legcit_data_dir`: The directory where the Case Law data is stored.
 - `uspto_data_dir`: The directory where the USPTO data is stored.
 
-Please download the raw data from the following links and put them in the `data` directory.
+Please download the raw data from the following links and put them in the the directory you specified in the `config.yaml` file.
 - APS: https://journals.aps.org/datasets
 - Case Law: https://case.law/
 - USPTO: https://patentsview.org/
