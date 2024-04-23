@@ -10,7 +10,7 @@ DATA_DIR = j(config["data_dir"])
 
 # ============
 # RAW DATA
-# ===========
+# ============
 
 # SQL files
 RAW_SQL_DATA_DIR = "/gpfs/sciencegenome/uspto/USPTO_2020/PatentsView_20200630/"
