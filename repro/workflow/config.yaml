@@ -1,4 +1,6 @@
 # set the directories below and copy this file as `config.yaml`
-data_dir: "/home/skojaku/projects/Legal-Citations/data/Data"
-paper_dir: "/home/skojaku/projects/Legal-Citations/paper"
-wos_json_dir: "/gpfs/sciencegenome/WoSjson2019/"
+data_dir: "<Put the path to the folder in which you want to generate the results. Generating the full results require more than 2T byte of space>"
+supp_data_dir: "<Put the path to the folder in which the supplementary data is stored>"
+aps_data_dir: "<Put the path to the folder in which the APS data is stored>"
+legcit_data_dir: "<Put the path to the folder in which the legal citation data is stored>"
+uspto_data_dir: "<Put the path to the folder in which the USPTO data is stored>"
