@@ -29,7 +29,7 @@ We built the workflows with [Snakemake](https://snakemake.readthedocs.io/en/stab
 First, set the environment specific variables in the [`repro/workflow/config.yaml`](./repro/workflow/config.yaml) file.
 The variables defined in the [`repro/workflow/config.yaml`](./repro/workflow/config.yaml) file are
 - `data_dir`: The directory where the raw data is stored.
-- `supp_data_dir`: The directory where the supplementary data is stored (which is [repro/data_supp](./repro/data_supp)).
+- `supp_data_dir`: The directory where the supplementary data is stored (which is [repro/data_suppl](./repro/data_suppl)).
 - `aps_data_dir`: The directory where the APS data is stored.
 - `legcit_data_dir`: The directory where the Case Law data is stored.
 - `uspto_data_dir`: The directory where the USPTO data is stored.
