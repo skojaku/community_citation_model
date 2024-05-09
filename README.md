@@ -49,7 +49,7 @@ The variables defined in the [`repro/workflow/config.yaml`](./repro/workflow/con
 - `legcit_data_dir`: The directory where the Case Law data is stored.
 - `uspto_data_dir`: The directory where the USPTO data is stored.
 
-Please download the raw data from the following links and put them in the `data` directory.
+Please download the raw data from the following links and put them in the the directory you specified in the `config.yaml` file.
 - APS: https://journals.aps.org/datasets
 - Case Law: https://case.law/
 - USPTO: https://patentsview.org/
@@ -94,8 +94,8 @@ TBD
   - [ ] Test
 - [ ] Automatic workflow for reproduceability
   - [x] Move Snakefile and workflow scripts
+  - [x] Run the workflow and make sure that it works
+  - [x] Write the instruction on README.
   - [ ] Remove unused rules & variables
   - [ ] Pack all rules into one Snakemake
   - [ ] Replace old CCM code with new CCM code
-  - [x] Run the workflow and make sure that it works (for demo data)
-  - [ ] Write the instruction on README.
