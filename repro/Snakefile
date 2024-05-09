@@ -17,12 +17,8 @@ PAPER, SUPP = [j(PAPER_DIR, f) for f in ("main.pdf", "supp.pdf")]
 # =========
 # Data list
 # =========
-#DATA_LIST = ["legcitv2", "aps"]
-#DATA_LIST = ["aps", "legcitv2"]
-#DATA_LIST = ["aps"]
-#DATA_LIST = ["legcitv2", "aps"]
-#DATA_LIST = ["aps"]
-DATA_LIST = ["legcitv2", "aps", "uspto"]
+#DATA_LIST = ["legcitv2", "aps", "uspto"]
+DATA_LIST = ["demo"] # Comment out this line and uncomment the above line to run the analysis for all the datasets
 
 
 # ===========================
@@ -156,9 +152,9 @@ rule all:
         #
         # Stats of embedding
         #
-        #expand(REPRO_CITATION_RADII_FILE, data=DATA_LIST, **params_canonical_spherical_model),
-        expand(KEYWORD_PRED_SCORE_FILE, data=DATA_LIST, **params_canonical_spherical_model, categoryClass = ["main", "sub"]),
-        expand(KEYWORD_PRED_SCORE_BY_CITATION_FILE, data=DATA_LIST, categoryClass = ["main", "sub"] ),
+        expand(REPRO_CITATION_RADII_FILE, data=DATA_LIST, **params_canonical_spherical_model),
+        #expand(KEYWORD_PRED_SCORE_FILE, data=DATA_LIST, **params_canonical_spherical_model, categoryClass = ["main", "sub"]),
+        #expand(KEYWORD_PRED_SCORE_BY_CITATION_FILE, data=DATA_LIST, categoryClass = ["main", "sub"] ),
         #expand(REPRO_BASELINE_CITATION_RADII_FILE, data=DATA_LIST, **params_canonical_spherical_model, model=["PA"], sample = [0]),
         #
         # Prediction
@@ -185,7 +181,7 @@ rule all:
         expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT, data = DATA_LIST, **params_spherical_model),
         expand(FIG_REPRO_TEST_NEW_VS_ACCUM_CIT_ALL_RANGE, data = DATA_LIST, **params_spherical_model),
         expand(FIG_GEO_SIM_DATA_SB_COEFFICIENT, data = DATA_LIST, **params_spherical_model),
-        expand(FIG_EMB_SPACE, data = DATA_LIST, **params_canonical_spherical_model, sample = [0]),
+        #expand(FIG_EMB_SPACE, data = DATA_LIST, **params_canonical_spherical_model, sample = [0]),
 
 rule figs:
     input:

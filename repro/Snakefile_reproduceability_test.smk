@@ -295,53 +295,53 @@ rule citation_radii_analysis_baseline:
     script:
         "workflow/stats/citation_radii.py"
 
-rule generate_benchmark_dataset:
-    input:
-        citation_net_file=CITATION_NET,
-        paper_category_table_file = PAPER_CATEGORY_TABLE,
-    params:
-        categoryClass = lambda wildcards: wildcards.categoryClass,
-        min_keyword_freq=100,
-        n_splits=5,
-        max_n_samples=1000000,
-    output:
-        output_file=KEYWORD_PRED_DATASET_FILE,
-    script:
-        "workflow/fit-spherical-model/generate-benchmark-dataset.py"
-
-rule run_benchmark_with_paper_embedding:
-    input:
-        benchmark_data_file=KEYWORD_PRED_DATASET_FILE,
-        model_file=REPRO_TEST_GEOMETRIC_MODEL_FILE,
-        paper_table_file = PAPER_TABLE
-    params:
-        dim = lambda wildcards : wildcards.dim,
-    output:
-        output_file=KEYWORD_PRED_SCORE_FILE,
-    resources:
-        gpu=1,
-    script:
-        "workflow/fit-spherical-model/benchmark-keyword-prediction-by-knn.py"
-
-rule run_benchmark_with_citation:
-    input:
-        net_file=CITATION_NET,
-        benchmark_data_file=KEYWORD_PRED_DATASET_FILE,
-    output:
-        output_file=KEYWORD_PRED_SCORE_BY_CITATION_FILE,
-    script:
-        "workflow/fit-spherical-model/benchmark-keyword-prediction-by-citation.py"
-
-rule plot_benchmark_result:
-    input:
-        score_file = KEYWORD_PRED_SCORE_FILE,
-        baseline_score_file = KEYWORD_PRED_SCORE_BY_CITATION_FILE
-    output:
-        output_file=FIG_KEYWORD_PRED_SCORE_FILE,
-    params:
-        eval_metric="microf1",
-    script:
-        "workflow/plot/plot-paper-keyword-pred-result.py"
+#rule generate_benchmark_dataset:
+#    input:
+#        citation_net_file=CITATION_NET,
+#        paper_category_table_file = PAPER_CATEGORY_TABLE,
+#    params:
+#        categoryClass = lambda wildcards: wildcards.categoryClass,
+#        min_keyword_freq=100,
+#        n_splits=5,
+#        max_n_samples=1000000,
+#    output:
+#        output_file=KEYWORD_PRED_DATASET_FILE,
+#    script:
+#        "workflow/fit-spherical-model/generate-benchmark-dataset.py"
+#
+#rule run_benchmark_with_paper_embedding:
+#    input:
+#        benchmark_data_file=KEYWORD_PRED_DATASET_FILE,
+#        model_file=REPRO_TEST_GEOMETRIC_MODEL_FILE,
+#        paper_table_file = PAPER_TABLE
+#    params:
+#        dim = lambda wildcards : wildcards.dim,
+#    output:
+#        output_file=KEYWORD_PRED_SCORE_FILE,
+#    resources:
+#        gpu=1,
+#    script:
+#        "workflow/fit-spherical-model/benchmark-keyword-prediction-by-knn.py"
+#
+#rule run_benchmark_with_citation:
+#    input:
+#        net_file=CITATION_NET,
+#        benchmark_data_file=KEYWORD_PRED_DATASET_FILE,
+#    output:
+#        output_file=KEYWORD_PRED_SCORE_BY_CITATION_FILE,
+#    script:
+#        "workflow/fit-spherical-model/benchmark-keyword-prediction-by-citation.py"
+#
+#rule plot_benchmark_result:
+#    input:
+#        score_file = KEYWORD_PRED_SCORE_FILE,
+#        baseline_score_file = KEYWORD_PRED_SCORE_BY_CITATION_FILE
+#    output:
+#        output_file=FIG_KEYWORD_PRED_SCORE_FILE,
+#    params:
+#        eval_metric="microf1",
+#    script:
+#        "workflow/plot/plot-paper-keyword-pred-result.py"
 
 # ========================================================
 # Calc net stats of the simulated net

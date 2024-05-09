@@ -14,16 +14,31 @@ cd repro
 conda env create -f environment.yml
 ```
 
-This will create a conda environment named `citationdynamics` with all the packages required to run the scripts.
+This will create a conda environment named `citationdynamics` with the packages required to run the scripts.
 Then, activate the environment with the following command:
 
 ```bash
 conda activate citationdynamics
 ```
 
+We will need some custom libraries to run the workflows. These custom libraries are under `./repo/libs/` folders. Please install them by running the following command:
+```bash
+pip install -e ./repo/libs/geocitmodel
+pip install -e ./repo/libs/xnet
+```
+
 ## Running the scripts
 
 We built the workflows with [Snakemake](https://snakemake.readthedocs.io/en/stable/), a workflow management system.
+
+
+### Requirements
+
+- Python 3.9 or later
+- GPU memory >= 16GB
+- CUDA >= 11.0
+- Memory: > 500GB
+- Disk space >= 2T
 
 ### Set up the environment variables
 First, set the environment specific variables in the [`repro/workflow/config.yaml`](./repro/workflow/config.yaml) file.
@@ -82,5 +97,5 @@ TBD
   - [ ] Remove unused rules & variables
   - [ ] Pack all rules into one Snakemake
   - [ ] Replace old CCM code with new CCM code
-  - [ ] Run the workflow and make sure that it works (for APS)
+  - [x] Run the workflow and make sure that it works (for demo data)
   - [ ] Write the instruction on README.
